@@ -54,11 +54,6 @@ func (p *Parser) consumeWhile(test func(rune) bool) string {
 	return res
 }
 
-// consumeWhitespace discards whitespace
-func (p *Parser) consumeWhitespace() {
-	p.consumeWhile(unicode.IsSpace)
-}
-
 // parseName parses tag & attribute names
 func (p *Parser) parseName() string {
 	return p.consumeWhile(func(c rune) bool {
@@ -140,7 +135,7 @@ func (p *Parser) parseAttrs() dom.AttrMap {
 	attr := make(map[string]string)
 
 	for {
-		p.consumeWhitespace()
+		p.consumeWhile(unicode.IsSpace)
 		if p.nextChar() == '>' {
 			break
 		}
@@ -153,7 +148,7 @@ func (p *Parser) parseAttrs() dom.AttrMap {
 func (p *Parser) parseNodes() []dom.Node {
 	nodes := make([]dom.Node, 0)
 	for {
-		p.consumeWhitespace()
+		p.consumeWhile(unicode.IsSpace)
 		if p.endOfS() || p.startsWith("</") {
 			break
 		}
