@@ -1,7 +1,7 @@
 package dom
 
 type (
-	// Node represents a node on the DOM tree; A Node can be of either of 2 types: Text or Element
+	// Node represents a node on the DOM dom; A Node can be of either of 2 types: Text or Element
 	Node struct {
 		children []Node
 		nodeType NodeType

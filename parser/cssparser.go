@@ -3,17 +3,20 @@ package parser
 import "unicode"
 
 type (
+	// Stylesheet respresents a CSS stylesheet
 	Stylesheet struct {
 		rules []Rules
 	}
 
+	// Rules are CSS code brackets written like so: Selector { Declaration; }
 	Rules struct {
 		selectors    []Selector
 		declarations []Declaration
 	}
 
+	// Selector can be either '#', '.', or 'tagName' and represent an attribute or element from HTML
 	Selector interface {
-		Selector(SimpleSelector)
+		Simple(SimpleSelector)
 	}
 
 	SimpleSelector struct {
@@ -21,26 +24,33 @@ type (
 		class       []string
 	}
 
+	// A Declaration is CSS code within brackets
 	Declaration struct {
 		name  string
 		value Value
 	}
 
+	// Value are possible values for CSS declarations
 	Value interface {
 		Keyword(string)
 		Length(float32, Unit)
 		ColorVal(Color)
 	}
 
+	// Unit for length values
 	Unit struct {
-		Px, Em, Rem int8
+		Px int8
 	}
 
+	// Color represented by RGBA
 	Color struct {
 		r, g, b, a uint8
 	}
+
+	Specificity [3]*uint
 )
 
+// parseSimpleSelector parses a single selector
 func (p *Parser) parseSimpleSelector() SimpleSelector {
 	selector := SimpleSelector{
 		tagName: "",
@@ -65,6 +75,7 @@ func (p *Parser) parseSimpleSelector() SimpleSelector {
 	return selector
 }
 
+// validIDChar checks that input is a valid char
 func validIDChar(c byte) bool {
 	if unicode.IsLetter(rune(c)) || unicode.IsNumber(rune(c)) || c == '_' {
 		return true
